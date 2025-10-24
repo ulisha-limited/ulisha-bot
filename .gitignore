@@ -1,0 +1,11 @@
+node_modules
+dist
+.wwebjs_auth
+.wwebjs_cache
+.temp
+.downloads
+.youtubei
+.tsbuildinfo
+*.log
+*.env
+*.phishtank

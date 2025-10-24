@@ -1,0 +1,78 @@
+{
+  "name": "project-canis",
+  "version": "11.1.0",
+  "description": "Canis Major and the constellation Canis Minor, the “lesser dog,” are widely regarded as two hunting hounds that follow Orion, the great hunter of ancient Greek legends.",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "build:clean": "node scripts/build.js --clean",
+    "start": "clear && while [ true ]; do node dist/index.js ; done",
+    "dev": "clear && while [ true ]; do ts-node src/index.ts ; done"
+  },
+  "author": {
+    "name": "Melvin Jones Repol",
+    "email": "mrepol742@gmail.com",
+    "url": "https://mrepol742.github.io"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrepol742/project-canis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mrepol742/project-canis/issues",
+    "email": "mrepol742@gmail.com"
+  },
+  "dependencies": {
+    "@google/genai": "^1.19.0",
+    "@openrouter/ai-sdk-provider": "^0.7.2",
+    "@prisma/client": "^6.12.0",
+    "@sentry/node": "^10.15.0",
+    "ai": "^4.3.19",
+    "axios": "^1.10.0",
+    "cli-progress": "^3.12.0",
+    "countries-and-timezones": "^3.8.0",
+    "dotenv": "^17.2.0",
+    "emoji-regex": "^10.5.0",
+    "fb-downloader-scrapper": "^3.0.1",
+    "genius-lyrics": "^4.4.7",
+    "google-tts-api": "^2.0.2",
+    "groq-sdk": "^0.27.0",
+    "is-spaghetti-code": "^1.0.1",
+    "libphonenumber-js": "^1.12.24",
+    "mathjs": "^15.0.0",
+    "moment-timezone": "^0.6.0",
+    "node-cron": "^4.2.1",
+    "npmlog": "^7.0.1",
+    "ollama": "^0.5.16",
+    "openai": "^5.10.2",
+    "p-queue": "^9.0.0",
+    "qrcode-terminal": "^0.12.0",
+    "redis": "^5.6.0",
+    "semver": "^7.7.2",
+    "speedtest-net": "^2.2.0",
+    "systeminformation": "^5.27.7",
+    "unbzip2-stream": "^1.4.3",
+    "undici": "^7.16.0",
+    "whatsapp-web.js": "^1.31.0",
+    "youtubei.js": "^16.0.1"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
+    "@types/dotenv": "^6.1.1",
+    "@types/he": "^1.2.3",
+    "@types/node": "^24.0.14",
+    "@types/npmlog": "^7.0.0",
+    "@types/qrcode-terminal": "^0.12.2",
+    "@types/semver": "^7.7.1",
+    "@types/speedtest-net": "^2.1.5",
+    "@types/unbzip2-stream": "^1.4.3",
+    "prisma": "^6.12.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=24.x"
+  }
+}
