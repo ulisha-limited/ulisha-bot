@@ -29,12 +29,6 @@ export async function addUserQuizPoints(
         commandCount: {
           increment: 1,
         },
-        quizAnswered: {
-          increment: answered ? 1 : 0,
-        },
-        quizAnsweredWrong: {
-          increment: answered ? 0 : 1,
-        },
         points: {
           increment: answered ? points : 1,
         },
@@ -46,7 +40,10 @@ export async function addUserQuizPoints(
   }
 }
 
-export async function findOrCreateUser(msg: Message): Promise<boolean> {
+export async function findOrCreateUser(
+  msg: Message,
+  sid: string,
+): Promise<boolean> {
   const lid = (msg.author ?? msg.from).split("@")[0];
 
   const min = 0.1;
@@ -83,6 +80,7 @@ export async function findOrCreateUser(msg: Message): Promise<boolean> {
         tx.user.create({
           data: {
             lid,
+            sid,
             name,
             number,
             countryCode,
@@ -130,107 +128,6 @@ export async function getUserCount(): Promise<number> {
     console.error("Failed to get user count:", error);
   }
   return 0;
-}
-
-export async function getUsersPoints(): Promise<any[]> {
-  try {
-    const users = await prisma.user.groupBy({
-      by: ["name", "points"],
-      _sum: {
-        points: true,
-      },
-      where: {
-        points: {
-          not: 0,
-        },
-      },
-      orderBy: {
-        _sum: {
-          points: "desc",
-        },
-      },
-      take: 15,
-    });
-
-    return users.map(
-      (u: { name: string; _sum: { points: number | null } }) => ({
-        name: u.name,
-        points: u._sum.points,
-      }),
-    );
-  } catch (error) {
-    Sentry.captureException(error);
-    log.error("Database", `Failed to get users.`, error);
-  }
-  return [];
-}
-
-export async function getUsersCommandCount(): Promise<any[]> {
-  try {
-    const users = await prisma.user.groupBy({
-      by: ["name", "commandCount"],
-      _sum: {
-        commandCount: true,
-      },
-      where: {
-        commandCount: {
-          not: 0,
-        },
-      },
-      orderBy: {
-        _sum: {
-          commandCount: "desc",
-        },
-      },
-      take: 15,
-    });
-
-    return users.map(
-      (u: { name: string; _sum: { commandCount: number | null } }) => ({
-        name: u.name,
-        commandCount: ((u._sum.commandCount ?? 0) * 0.5) / 2,
-      }),
-    );
-  } catch (error) {
-    Sentry.captureException(error);
-    log.error("Database", `Failed to get users.`, error);
-  }
-  return [];
-}
-
-export async function getUsersQuiz(): Promise<any[]> {
-  try {
-    const users = await prisma.user.groupBy({
-      by: ["name", "quizAnswered", "quizAnsweredWrong"],
-      _sum: {
-        quizAnswered: true,
-        quizAnsweredWrong: true,
-      },
-      where: {
-        OR: [{ quizAnswered: { not: 0 } }, { quizAnsweredWrong: { not: 0 } }],
-      },
-      orderBy: {
-        _sum: {
-          quizAnswered: "desc",
-        },
-      },
-      take: 15,
-    });
-
-    return users.map(
-      (u: {
-        name: string;
-        _sum: { quizAnswered: number | null; quizAnsweredWrong: number | null };
-      }) => ({
-        name: u.name,
-        score: (u._sum.quizAnswered ?? 0) + (u._sum.quizAnsweredWrong ?? 0) / 2,
-      }),
-    );
-  } catch (error) {
-    Sentry.captureException(error);
-    log.error("Database", `Failed to get users.`, error);
-  }
-  return [];
 }
 
 export async function getBlockUser(lid: string): Promise<boolean> {

@@ -6,7 +6,7 @@ export const info = {
   description: "Pin a message for a long duration.",
   usage: "pin",
   example: "pin",
-  role: "user",
+  role: "admin",
   cooldown: 5000,
 };
 

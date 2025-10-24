@@ -55,24 +55,11 @@ function checkChrome() {
   }
 }
 
-function checkFFMPEG() {
-  try {
-    const version = execSync("ffmpeg -version")
-      .toString()
-      .split("\n")[0]
-      .trim();
-    log.info("FFMPEG", version);
-  } catch {
-    log.warn("FFMPEG", "FFmpeg not found. Some features may not work.");
-  }
-}
-
 export function checkRequirements() {
   log.info("Requirements", "Checking bot requirements...");
   checkNodeVersion();
   checkMySQL();
   checkRedis();
   checkChrome();
-  checkFFMPEG();
   log.info("Requirements", "Bot requirements check complete.");
 }

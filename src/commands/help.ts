@@ -7,7 +7,7 @@ export const info = {
   description: "List available commands and their usage.",
   usage: "help [--role] [page|command]",
   example: "help --admin 2",
-  role: "user",
+  role: "admin",
   cooldown: 5000,
 };
 

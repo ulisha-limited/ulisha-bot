@@ -38,15 +38,7 @@ export default async function (msg: Message): Promise<void> {
   Available Commands:
   `;
 
-  const excludeCommands: string[] = [
-    ".",
-    "ai",
-    "mj",
-    "obi",
-    "naij",
-    "chad",
-    "sim",
-  ];
+  const excludeCommands: string[] = ["ai"];
 
   for (const key in commands) {
     const cmd = commands[key];

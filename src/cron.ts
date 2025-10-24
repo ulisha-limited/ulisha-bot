@@ -1,5 +1,4 @@
 import cron from "node-cron";
-import speedtestJob, { info as speedtestInfo } from "./jobs/speedtest";
 import pingJob, { info as pingInfo } from "./jobs/ping";
 import log from "./components/utils/log";
 import * as Sentry from "@sentry/node";
@@ -24,10 +23,7 @@ interface CronJob {
 }
 
 // register more cron jobin here
-const jobs: CronJob[] = [
-  { info: speedtestInfo, job: speedtestJob },
-  { info: pingInfo, job: pingJob },
-];
+const jobs: CronJob[] = [{ info: pingInfo, job: pingJob }];
 
 export function registerCronJobs(): void {
   try {

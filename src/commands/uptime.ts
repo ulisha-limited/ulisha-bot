@@ -8,7 +8,7 @@ export const info = {
   description: "Get the bot's uptime and process information.",
   usage: "uptime",
   example: "uptime",
-  role: "user",
+  role: "admin",
   cooldown: 5000,
 };
 

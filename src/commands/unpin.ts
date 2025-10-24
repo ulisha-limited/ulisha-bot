@@ -6,7 +6,7 @@ export const info = {
   description: "Unpin a pinned message.",
   usage: "unpin",
   example: "unpin",
-  role: "user",
+  role: "admin",
   cooldown: 5000,
 };
 

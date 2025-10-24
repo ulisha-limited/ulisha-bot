@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `User` ADD COLUMN `commandCount` INTEGER NOT NULL DEFAULT 0;

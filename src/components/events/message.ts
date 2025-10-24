@@ -2,25 +2,11 @@ import { Message, MessageContent, MessageSendOptions } from "whatsapp-web.js";
 import log from "../utils/log";
 import { commands } from "../utils/cmd/loader";
 import { penalizeUser, rateLimiter } from "../utils/rateLimiter";
-import {
-  addBlockUser,
-  deductUserPoints,
-  findOrCreateUser,
-  getBlockUser,
-  isAdmin,
-} from "../services/user";
+import { getBlockUser, isAdmin } from "../services/user";
 import { client } from "../client";
 import Font from "../utils/font";
-import quiz from "../utils/quiz";
-import riddle from "../utils/riddle";
 import { getSetting } from "../services/settings";
 import { errors, mentionResponses } from "../utils/data";
-import autoReaction from "../utils/message/react";
-import { InstantDownloader } from "../utils/instantdl/downloader";
-import { checkInappropriate } from "../utils/contentChecker";
-import redis from "../redis";
-import downloadQueue from "../queue/download";
-import reactQueue from "../queue/react";
 import ai from "../../commands/ai";
 import * as Sentry from "@sentry/node";
 
@@ -123,25 +109,6 @@ export default async function (msg: Message, type: string): Promise<void> {
       msg.body = normalizedBody;
 
       await Promise.allSettled([
-        quiz(msg),
-        riddle(msg),
-        downloadQueue.add(() => InstantDownloader(msg)),
-        (async () => {
-          // override the msg!
-          const react = { ...msg };
-          const [isMustautoReact, alreadyReacted] = await Promise.all([
-            getSetting("auto_react"),
-            redis.get(`react:${msg.id.id}`),
-          ]);
-          if (
-            (!isMustautoReact && isMustautoReact != "on") ||
-            alreadyReacted ||
-            react.fromMe
-          )
-            return;
-
-          reactQueue.add(() => autoReaction(msg));
-        })(),
         (async () => {
           const botId = (await client()).info.wid._serialized;
           if (msg.mentionedIds.length == 0 || !msg.mentionedIds.includes(botId))
@@ -223,37 +190,16 @@ export default async function (msg: Message, type: string): Promise<void> {
       return await originalReply(messageBody, chatId, options);
     };
 
-    if (!msg.fromMe) {
-      const isInapproiateResponse = checkInappropriate(msg.body);
-      if (isInapproiateResponse.isInappropriate) {
-        const text =
-          "You have been blocked. For more information \`terms\` & \`privacy\`.";
-        await Promise.allSettled([
-          originalReply(text),
-          addBlockUser(lid),
-          deductUserPoints(lid, 20),
-        ]);
-
-        log.info("BlockUser", lid);
-        return;
-      }
+    /*
+     * Execute the command handler.
+     */
+    try {
+      await handler.exec(msg);
+    } catch (error) {
+      Sentry.captureException(error);
+      log.error(key, error);
+      await msg.reply(errors[Math.floor(Math.random() * errors.length)]);
     }
-
-    await Promise.allSettled([
-      (async () => {
-        /*
-         * Execute the command handler.
-         */
-        try {
-          await handler.exec(msg);
-        } catch (error) {
-          Sentry.captureException(error);
-          log.error(key, error);
-          await msg.reply(errors[Math.floor(Math.random() * errors.length)]);
-        }
-      })(),
-      findOrCreateUser(msg),
-    ]);
   } catch (err) {
     Sentry.captureException(err);
     log.error("Error handling call:", err);

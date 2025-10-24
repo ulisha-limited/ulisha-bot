@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "project-canis",
+      name: "ulisha-bot",
       script: "dist/index.js",
       instances: 1,
       exec_mode: "fork",

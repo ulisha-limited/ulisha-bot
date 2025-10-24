@@ -1,4 +1,4 @@
-import { Message } from "../types/message"
+import { Message } from "../types/message";
 import log from "../components/utils/log";
 import os from "os";
 import si from "systeminformation";
@@ -6,7 +6,6 @@ import { getUserCount } from "../components/services/user";
 import { client } from "../components/client";
 import { commands } from "../components/utils/cmd/loader";
 import timestamp from "../components/utils/timestamp";
-import speedTest from "../components/utils/speedtest";
 import redis from "../components/redis";
 
 export const info = {
@@ -14,7 +13,7 @@ export const info = {
   description: "Get system, network, node and bot runtime stats.",
   usage: "stats",
   example: "stats",
-  role: "user",
+  role: "admin",
   cooldown: 5000,
 };
 
@@ -58,7 +57,6 @@ export default async function (msg: Message): Promise<void> {
     waVersion,
     deviceCount,
     chats,
-    speedTestResults,
   ] = await Promise.all([
     si.graphics(),
     si.osInfo(),
@@ -71,7 +69,6 @@ export default async function (msg: Message): Promise<void> {
     waClient.getWWebVersion(),
     waClient.getContactDeviceCount(msg.from),
     waClient.getChats(),
-    speedTest(),
   ]);
 
   const statsMessage = `
@@ -91,9 +88,6 @@ export default async function (msg: Message): Promise<void> {
 
     \`Network\`
     Interface: ${networkInterfaces.map((iface: { iface: string; speed: number | null }) => `${iface.iface} ${iface.speed} Mbps`).join(", ")}
-    Download: ${(speedTestResults?.download?.bandwidth || 0) / 125000} Mbps
-    Upload: ${(speedTestResults?.upload?.bandwidth || 0) / 125000} Mbps
-    Ping: ${speedTestResults?.ping.latency} ms
 
     \`Node.js Runtime\`
 

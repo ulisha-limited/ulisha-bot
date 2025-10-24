@@ -11,17 +11,10 @@ import {
 import qrcode from "qrcode-terminal";
 import LoadingBar from "./utils/loadingBar";
 import messageEvent from "./events/message";
-import messageEdit from "./events/edit";
 import groupLeave from "./events/groups/leave";
 import groupJoin from "./events/groups/join";
-import reaction from "./events/reaction";
 import ready from "./events/ready";
-import revoke from "./events/revoke";
 import callEvent from "./events/call";
-import DownloadMedia from "./utils/message/download";
-import CheckSpamLink from "./utils/phishtank/checkSpam";
-import queue from "./queue/download";
-import groupAdminChanged from "./events/groups/groupAdminChanged";
 
 let instance: Client | null = null;
 let isLoadingBarStarted = false;
@@ -87,34 +80,20 @@ function registerEvents(client: Client): void {
 
   client.on("ready", () => ready());
 
-  client.on("message_reaction", (react: Reaction) => reaction(client, react));
-
-  client.on("message_create", (msg: Message) => {
-    CheckSpamLink(msg);
-    messageEvent(msg, "create");
-     queue.add(() => DownloadMedia(msg))
-  });
+  client.on("message_create", (msg: Message) => messageEvent(msg, "create"));
 
   client.on(
     "message_edit",
     (msg: Message, newBody: string, prevBody: string) => {
       msg.body = newBody;
-      messageEdit(msg, newBody, prevBody);
       messageEvent(msg, "edit");
     },
-  );
-
-  client.on("message_revoke_everyone", (msg: Message, revoked_msg?: Message) =>
-    revoke(msg, revoked_msg),
   );
 
   client.on("call", (call: Call) => callEvent(call));
 
   client.on("group_join", (notif: GroupNotification) => groupJoin(notif));
   client.on("group_leave", (notif: GroupNotification) => groupLeave(notif));
-  client.on("group_admin_changed", (notif: GroupNotification) =>
-    groupAdminChanged(notif),
-  );
 
   client.on("auth_failure", () => {
     loadingBar.stop();
