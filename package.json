@@ -5,11 +5,11 @@
   "private": true,
   "main": "src/index.ts",
   "scripts": {
-    "build": "node scripts/build.js",
-    "build:clean": "node scripts/build.js --clean",
+    "build": "ts-node scripts/build.ts",
+    "build:clean": "ts-node scripts/build.ts --clean",
     "start": "clear && while [ true ]; do node dist/index.js ; done",
     "dev": "clear && while [ true ]; do ts-node src/index.ts ; done",
-    "fetch:types": "npx supabase gen types typescript --project-id xmrnhaktqjmnihzexpsd --schema public > src/supabase-types.ts"
+    "test:sentry": "ts-node tests/sentry.ts"
   },
   "author": {
     "name": "Melvin Jones Repol",
@@ -58,6 +58,6 @@
     "typescript": "^5.8.3"
   },
   "engines": {
-    "node": ">=24.x"
+    "node": ">=18.x"
   }
 }
