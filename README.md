@@ -74,10 +74,10 @@
 
 ## License
 
-Ulisha Bot is licensed under the [**Custom Binary Distribution License (v1.0)**](./LICENSE).
+This project is licensed under the [Polyform Noncommercial License 1.0.0](LICENSE).
 
 This project builds upon the mrepol742/project-canis Template, which is licensed under the
 [Apache License](./LICENSE-APACHE).
 
 Unless otherwise noted, all new code, assets, and configurations added for
-Ulisha Store are covered by the Custom Binary Distribution License (v1.0).
+Ulisha Store are covered by the Polyform Noncommercial License 1.0.0].
