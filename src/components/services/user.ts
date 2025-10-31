@@ -230,6 +230,36 @@ export async function pendingUser(
   return null;
 }
 
+export async function findPendingUserByCode(
+  code: string,
+): Promise<string | null> {
+  let cursor = 0;
+
+  do {
+    const { cursor: nextCursor, keys } = await redis.scan(cursor.toString(), {
+      MATCH: "pending-user:*",
+      COUNT: 100,
+    });
+
+    for (const key of keys) {
+      const val = await redis.get(key);
+      if (!val) continue;
+
+      try {
+        const data = JSON.parse(val);
+        if (data.code === code) {
+          const lid = key.split(":")[1];
+          return lid;
+        }
+      } catch {}
+    }
+
+    cursor = Number(nextCursor);
+  } while (cursor !== 0);
+
+  return null;
+}
+
 export async function loginUser(lid: string): Promise<boolean> {
   try {
     const key = `user:${lid}`;

@@ -1,13 +1,18 @@
 import http from "http";
 import log from "./utils/log";
 import * as Sentry from "@sentry/node";
+import IntegrationWebhook from "./routes/webhook/integration/route";
 
 const MAX_PORT_TRIES = 10;
+const PROJECT_HOST_WEBSITE =
+  process.env.PROJECT_HOST_WEBSITE || "http://localhost:3000";
 
 function startServer(port: number, tries = 0) {
-  const server = http.createServer((req, res) => {
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Bot is running\n");
+  const server = http.createServer(async (req, res) => {
+    if (await IntegrationWebhook(req, res)) return;
+
+    res.writeHead(302, { Location: PROJECT_HOST_WEBSITE });
+    res.end();
   });
 
   server.listen(port, () => {
