@@ -15,11 +15,10 @@ export default async function (notif: GroupNotification): Promise<void> {
     const text = `
       🙋‍♂️ Hello everyone!
 
-      I'm ${PROJECT_CANIS_ALIAS}, a scalable, modular and
-      flexible chatbot for WhatsApp and Telegram.
+      I'm ${PROJECT_CANIS_ALIAS}. Check your account,
+      add to cart and checkout much simpler with me.
 
-      By continuing you agree to the bot \`terms\` and \`privacy\`.
-      To list down commands type \`help\`.
+      www.ulishastore.com
     `;
 
     const newMembers: string[] = [];

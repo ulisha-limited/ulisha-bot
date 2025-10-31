@@ -215,3 +215,41 @@ export async function addUserPoints(
     log.error("Database", `Failed to add user points: ${lid}`, error);
   }
 }
+
+export async function pendingUser(
+  lid: string,
+): Promise<{ code: string } | null> {
+  try {
+    const key = `pending-user:${lid}`;
+    const val = await redis.get(key);
+    if (val) return JSON.parse(val);
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Database", `Failed to check if user is login: ${lid}`, error);
+  }
+  return null;
+}
+
+export async function loginUser(lid: string): Promise<boolean> {
+  try {
+    const key = `user:${lid}`;
+    const val = await redis.get(key);
+    return val !== null;
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Database", `Failed to check if user is login: ${lid}`, error);
+  }
+  return false;
+}
+
+export async function logoutUser(lid: string): Promise<boolean> {
+  try {
+    const key = `user:${lid}`;
+    const val = await redis.get(key);
+    return val !== null;
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error("Database", `Failed to logout user: ${lid}`, error);
+  }
+  return false;
+}
